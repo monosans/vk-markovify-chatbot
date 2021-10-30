@@ -68,9 +68,8 @@ async def talk(message: Message) -> None:
             text = text.replace("\n\n", "\n")
 
         # Преобразование [id1|@durov] в @id1
-        user_ids = tuple(set(pattern.findall(text)))
-        for user_id in user_ids:
-            text = re.sub(rf"\[id{user_id}\|.*?]", f"@id{user_id}", text)
+        for user_id in set(pattern.findall(text)):
+            text = re.sub(rf"\[{user_id}\|.*?]", f"@{user_id}", text)
 
         # Создание папки db, если не создана
         try:
@@ -85,13 +84,13 @@ async def talk(message: Message) -> None:
     if randint(1, 100) > RESPONSE_CHANCE:
         return
 
+    # Задержка перед ответом
+    await sleep(RESPONSE_DELAY)
+
     # Чтение истории беседы
     async with open(f"db/{peer_id}.txt") as f:
         db = await f.read()
     db = db.strip().lower()
-
-    # Задержка перед ответом
-    await sleep(RESPONSE_DELAY)
 
     # Генерация сообщения
     text_model = NewlineText(input_text=db, well_formed=False, state_size=1)
@@ -101,5 +100,5 @@ async def talk(message: Message) -> None:
 
 
 if __name__ == "__main__":
-    pattern = re.compile(r"\[id(\d*?)\|.*?]")
+    pattern = re.compile(r"\[(id\d*?)\|.*?]")
     bot.run_forever()
