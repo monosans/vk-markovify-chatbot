@@ -8,11 +8,12 @@ from random import choice, randint
 from aiofiles import open
 from markovify import NewlineText
 from vkbottle.bot import Bot, Message
-from vkbottle.dispatch.rules.bot import ChatActionRule, FromUserRule
+from vkbottle.dispatch.rules.base import ChatActionRule, FromUserRule
 
 from config import BOT_TOKEN, RESPONSE_CHANCE, RESPONSE_DELAY
 
 bot = Bot(BOT_TOKEN)
+pattern = re.compile(r"\[(id\d*?)\|.*?]")
 
 
 @bot.on.chat_message(ChatActionRule("chat_invite_user"))
@@ -100,5 +101,4 @@ async def talk(message: Message) -> None:
 
 
 if __name__ == "__main__":
-    pattern = re.compile(r"\[(id\d*?)\|.*?]")
     bot.run_forever()
