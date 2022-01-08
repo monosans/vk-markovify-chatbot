@@ -1,3 +1,4 @@
 aiofiles>=0.7.0,<1.0.0
+loguru<1.0.0
 markovify>=0.9.0,<1.0.0
 vkbottle>=4.0.0,<5.0.0

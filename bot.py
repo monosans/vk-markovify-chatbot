@@ -2,24 +2,31 @@
 # -*- coding: utf-8 -*-
 import re
 from asyncio import sleep
-from os import mkdir, remove
+from contextlib import suppress
 from random import choice, randint
 
 from aiofiles import open
+from aiofiles.os import mkdir, remove
 from markovify import NewlineText
+from vkbottle import VKAPIError
 from vkbottle.bot import Bot, Message
 from vkbottle.dispatch.rules.base import ChatActionRule, FromUserRule
 
 from config import BOT_TOKEN, RESPONSE_CHANCE, RESPONSE_DELAY
 
 bot = Bot(BOT_TOKEN)
-pattern = re.compile(r"\[(id\d*?)\|.*?]")
+tag_pattern = re.compile(r"\[(id\d+?)\|.+?]")
+empty_line_pattern = re.compile(r"^\s+", flags=re.M)
 
 
 @bot.on.chat_message(ChatActionRule("chat_invite_user"))
 async def invited(message: Message) -> None:
     """Приветствие при приглашении бота в беседу."""
-    if message.group_id == -message.action.member_id:
+    action = message.action
+    group_id = message.group_id
+    if not action or not group_id:
+        return
+    if action.member_id == -group_id:
         await message.answer(
             """Всем привет!
 Для работы мне нужно выдать доступ к переписке или права администратора.
@@ -35,7 +42,7 @@ async def reset(message: Message) -> None:
         members = await message.ctx_api.messages.get_conversation_members(
             peer_id=peer_id
         )
-    except Exception:
+    except VKAPIError[917]:
         await message.answer(
             "Не удалось проверить, являетесь ли вы администратором, "
             + "потому что я не администратор."
@@ -46,10 +53,8 @@ async def reset(message: Message) -> None:
     if from_id in admins:
 
         # Удаление базы данных беседы
-        try:
-            remove(f"db/{peer_id}.txt")
-        except FileNotFoundError:
-            pass
+        with suppress(FileNotFoundError):
+            await remove(f"db/{peer_id}.txt")
 
         await message.answer(f"@id{from_id}, база данных успешно сброшена.")
     else:
@@ -64,21 +69,14 @@ async def talk(message: Message) -> None:
     text = message.text.lower()
 
     if text:
-        # Удаление пустых строк из полученного сообщения
-        while "\n\n" in text:
-            text = text.replace("\n\n", "\n")
+        # Удаление пустых строк и преобразование [id1|@durov] в @id1
+        text = tag_pattern.sub(r"@\1", empty_line_pattern.sub("", text))
 
-        # Преобразование [id1|@durov] в @id1
-        for user_id in set(pattern.findall(text)):
-            text = re.sub(rf"\[{user_id}\|.*?]", f"@{user_id}", text)
+        # Создание папки db
+        with suppress(FileExistsError):
+            await mkdir("db")
 
-        # Создание папки db, если не создана
-        try:
-            mkdir("db")
-        except FileExistsError:
-            pass
-
-        # Запись нового сообщения в историю беседы
+        # Запись сообщения в историю беседы
         async with open(f"db/{peer_id}.txt", "a") as f:
             await f.write(f"\n{text}")
 
