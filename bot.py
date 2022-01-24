@@ -15,7 +15,7 @@ from vkbottle.dispatch.rules.base import ChatActionRule, FromUserRule
 from config import BOT_TOKEN, RESPONSE_CHANCE, RESPONSE_DELAY
 
 bot = Bot(BOT_TOKEN)
-tag_pattern = re.compile(r"\[(id\d+?)\|.+?]")
+tag_pattern = re.compile(r"\[(id\d+?)\|.+?\]")
 empty_line_pattern = re.compile(r"^\s+", flags=re.M)
 
 
