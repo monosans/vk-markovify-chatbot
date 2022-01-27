@@ -3,10 +3,12 @@
 import re
 from asyncio import sleep
 from contextlib import suppress
+from os import mkdir
 from random import choice, randint
 
 from aiofiles import open
-from aiofiles.os import mkdir, remove
+from aiofiles.os import remove
+from aiofiles.ospath import exists
 from markovify import NewlineText
 from vkbottle import VKAPIError
 from vkbottle.bot import Bot, Message
@@ -67,18 +69,17 @@ async def reset(message: Message) -> None:
 async def talk(message: Message) -> None:
     peer_id = message.peer_id
     text = message.text.lower()
+    file_name = f"db/{peer_id}.txt"
 
     if text:
         # Удаление пустых строк и преобразование [id1|@durov] в @id1
         text = tag_pattern.sub(r"@\1", empty_line_pattern.sub("", text))
 
-        # Создание папки db
-        with suppress(FileExistsError):
-            await mkdir("db")
-
         # Запись сообщения в историю беседы
-        async with open(f"db/{peer_id}.txt", "a") as f:
+        async with open(file_name, "a") as f:
             await f.write(f"\n{text}")
+    elif not await exists(file_name):
+        return
 
     if randint(1, 100) > RESPONSE_CHANCE:
         return
@@ -87,7 +88,7 @@ async def talk(message: Message) -> None:
     await sleep(RESPONSE_DELAY)
 
     # Чтение истории беседы
-    async with open(f"db/{peer_id}.txt") as f:
+    async with open(file_name) as f:
         db = await f.read()
     db = db.strip().lower()
 
@@ -99,4 +100,6 @@ async def talk(message: Message) -> None:
 
 
 if __name__ == "__main__":
+    with suppress(FileExistsError):
+        mkdir("db")
     bot.run_forever()
