@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 import re
 from asyncio import sleep
-from contextlib import suppress
 from os import mkdir
 from random import choice, randint
 
@@ -55,8 +54,10 @@ async def reset(message: Message) -> None:
     if from_id in admins:
 
         # Удаление базы данных беседы
-        with suppress(FileNotFoundError):
+        try:
             await remove(f"db/{peer_id}.txt")
+        except FileNotFoundError:
+            pass
 
         await message.answer(f"@id{from_id}, база данных успешно сброшена.")
     else:
@@ -100,6 +101,8 @@ async def talk(message: Message) -> None:
 
 
 if __name__ == "__main__":
-    with suppress(FileExistsError):
+    try:
         mkdir("db")
+    except FileExistsError:
+        pass
     bot.run_forever()
