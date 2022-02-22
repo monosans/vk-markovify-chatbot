@@ -77,7 +77,7 @@ async def talk(message: Message) -> None:
         text = tag_pattern.sub(r"@\1", empty_line_pattern.sub("", text))
 
         # Запись сообщения в историю беседы
-        async with open(file_name, "a") as f:
+        async with open(file_name, "a", encoding="utf-8") as f:
             await f.write(f"\n{text}")
     elif not await exists(file_name):
         return
@@ -89,7 +89,7 @@ async def talk(message: Message) -> None:
     await sleep(RESPONSE_DELAY)
 
     # Чтение истории беседы
-    async with open(file_name) as f:
+    async with open(file_name, encoding="utf-8") as f:
         db = await f.read()
     db = db.strip().lower()
 
