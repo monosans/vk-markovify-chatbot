@@ -2,8 +2,10 @@
 # -*- coding: utf-8 -*-
 import re
 from asyncio import sleep
+from configparser import ConfigParser
 from os import mkdir
 from random import choice, randint
+from typing import Tuple
 
 from aiofiles import open
 from aiofiles.os import remove
@@ -13,8 +15,19 @@ from vkbottle import VKAPIError
 from vkbottle.bot import Bot, Message
 from vkbottle.dispatch.rules.base import ChatActionRule, FromUserRule
 
-from config import BOT_TOKEN, RESPONSE_CHANCE, RESPONSE_DELAY
 
+def get_config() -> Tuple[str, float, float]:
+    config = ConfigParser()
+    config.read("config.ini", encoding="utf-8")
+    cfg = config["DEFAULT"]
+    return (
+        cfg.get("BotToken"),
+        cfg.getfloat("ResponseDelay", 0),
+        cfg.getfloat("ResponseChance", 100),
+    )
+
+
+BOT_TOKEN, RESPONSE_DELAY, RESPONSE_CHANCE = get_config()
 bot = Bot(BOT_TOKEN)
 tag_pattern = re.compile(r"\[(id\d+?)\|.+?\]")
 empty_line_pattern = re.compile(r"^\s+", flags=re.M)
