@@ -115,7 +115,15 @@ async def talk(message: Message) -> None:
 
 if __name__ == "__main__":
     try:
+        import uvloop
+    except ImportError:
+        pass
+    else:
+        uvloop.install()
+
+    try:
         mkdir("db")
     except FileExistsError:
         pass
+
     bot.run_forever()
