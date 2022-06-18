@@ -35,6 +35,7 @@ def get_config() -> Config:
 
 config = get_config()
 bot = Bot(config.bot_token)
+bot.loop_wrapper.on_startup.append(aos.makedirs("db", exist_ok=True))
 tag_pattern = re.compile(r"\[(id\d+?)\|.+?\]")
 empty_line_pattern = re.compile(r"^\s+", flags=re.M)
 
@@ -72,7 +73,7 @@ async def reset(message: Message) -> None:
 
         # Удаление базы данных беседы
         try:
-            await aos.remove(f"db/{message.peer_id}.txt", loop=bot.loop)
+            await aos.remove(f"db/{message.peer_id}.txt")
         except FileNotFoundError:
             pass
 
@@ -95,9 +96,9 @@ async def talk(message: Message) -> None:
         text = tag_pattern.sub(r"@\1", text)
 
         # Запись сообщения в историю беседы
-        async with aopen(file_name, "a", encoding="utf-8", loop=bot.loop) as f:
+        async with aopen(file_name, "a", encoding="utf-8") as f:
             await f.write(f"\n{text}")
-    elif not await aos.path.exists(file_name, loop=bot.loop):
+    elif not await aos.path.exists(file_name):
         return
 
     if random.uniform(0, 100) > config.response_chance:
@@ -107,7 +108,7 @@ async def talk(message: Message) -> None:
     await asyncio.sleep(config.response_delay)
 
     # Чтение истории беседы
-    async with aopen(file_name, encoding="utf-8", loop=bot.loop) as f:
+    async with aopen(file_name, encoding="utf-8") as f:
         db = await f.read()
     db = db.strip().lower()
 
@@ -136,9 +137,6 @@ def main() -> None:
     else:
         uvloop.install()
 
-    bot.loop_wrapper.on_startup.append(
-        aos.makedirs("db", exist_ok=True, loop=bot.loop)
-    )
     bot.run_forever()
 
 
