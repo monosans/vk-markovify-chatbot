@@ -5,30 +5,36 @@ import logging
 import random
 import re
 from configparser import ConfigParser
-from typing import Tuple
 
 import markovify
 from aiofiles import open as aopen
 from aiofiles import os as aos
+from pydantic import BaseModel, Field, NonNegativeFloat
 from vkbottle import VKAPIError
 from vkbottle.bot import Bot, Message
 from vkbottle.dispatch.rules.base import ChatActionRule, FromUserRule
 from vkbottle_types.objects import MessagesMessageActionStatus
 
 
-def get_config() -> Tuple[str, float, float]:
+class Config(BaseModel):
+    bot_token: str = Field(min_length=1)
+    response_delay: NonNegativeFloat
+    response_chance: float = Field(gt=0, le=100)
+
+
+def get_config() -> Config:
     config = ConfigParser()
     config.read("config.ini", encoding="utf-8")
     cfg = config["DEFAULT"]
-    return (
-        cfg.get("BotToken"),
-        cfg.getfloat("ResponseDelay", 0),
-        cfg.getfloat("ResponseChance", 100),
+    return Config(
+        bot_token=cfg.get("BotToken"),
+        response_delay=cfg.getfloat("ResponseDelay", 0),
+        response_chance=cfg.getfloat("ResponseChance", 100),
     )
 
 
-BOT_TOKEN, RESPONSE_DELAY, RESPONSE_CHANCE = get_config()
-bot = Bot(BOT_TOKEN)
+config = get_config()
+bot = Bot(config.bot_token)
 tag_pattern = re.compile(r"\[(id\d+?)\|.+?\]")
 empty_line_pattern = re.compile(r"^\s+", flags=re.M)
 
@@ -78,9 +84,8 @@ async def reset(message: Message) -> None:
 
 @bot.on.chat_message(FromUserRule())  # type: ignore[misc]
 async def talk(message: Message) -> None:
-    peer_id = message.peer_id
     text = message.text.lower()
-    file_name = f"db/{peer_id}.txt"
+    file_name = f"db/{message.peer_id}.txt"
 
     if text:
         # Удаление пустых строк
@@ -95,11 +100,11 @@ async def talk(message: Message) -> None:
     elif not await aos.path.exists(file_name, loop=bot.loop):
         return
 
-    if random.randint(1, 100) > RESPONSE_CHANCE:
+    if random.uniform(0, 100) > config.response_chance:
         return
 
     # Задержка перед ответом
-    await asyncio.sleep(RESPONSE_DELAY)
+    await asyncio.sleep(config.response_delay)
 
     # Чтение истории беседы
     async with aopen(file_name, encoding="utf-8", loop=bot.loop) as f:
