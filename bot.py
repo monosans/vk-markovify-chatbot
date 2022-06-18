@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+import logging
 import re
 from asyncio import sleep
 from configparser import ConfigParser
@@ -113,7 +114,13 @@ async def talk(message: Message) -> None:
     await message.answer(sentence)
 
 
-if __name__ == "__main__":
+def main() -> None:
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s | %(levelname)s | %(message)s",
+        datefmt="%Y-%m-%d %H:%M:%S",
+    )
+
     try:
         import uvloop
     except ImportError:
@@ -127,3 +134,7 @@ if __name__ == "__main__":
         pass
 
     bot.run_forever()
+
+
+if __name__ == "__main__":
+    main()
