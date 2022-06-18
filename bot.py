@@ -1,20 +1,19 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+import asyncio
 import logging
+import random
 import re
-from asyncio import sleep
 from configparser import ConfigParser
-from os import mkdir
-from random import choice, randint
 from typing import Tuple
 
-from aiofiles import open
-from aiofiles.os import remove
-from aiofiles.ospath import exists
-from markovify import NewlineText
+import markovify
+from aiofiles import open as aopen
+from aiofiles import os as aos
 from vkbottle import VKAPIError
 from vkbottle.bot import Bot, Message
 from vkbottle.dispatch.rules.base import ChatActionRule, FromUserRule
+from vkbottle_types.objects import MessagesMessageActionStatus
 
 
 def get_config() -> Tuple[str, float, float]:
@@ -34,14 +33,14 @@ tag_pattern = re.compile(r"\[(id\d+?)\|.+?\]")
 empty_line_pattern = re.compile(r"^\s+", flags=re.M)
 
 
-@bot.on.chat_message(ChatActionRule("chat_invite_user"))
+@bot.on.chat_message(  # type: ignore[misc]
+    ChatActionRule(MessagesMessageActionStatus.CHAT_INVITE_USER.value)
+)
 async def invited(message: Message) -> None:
     """Приветствие при приглашении бота в беседу."""
-    action = message.action
-    group_id = message.group_id
-    if not action or not group_id:
+    if message.action is None or message.group_id is None:
         return
-    if action.member_id == -group_id:
+    if message.action.member_id == -message.group_id:
         await message.answer(
             """Всем привет!
 Для работы мне нужно выдать доступ к переписке или права администратора.
@@ -49,67 +48,71 @@ async def invited(message: Message) -> None:
         )
 
 
-@bot.on.chat_message(text=["/сброс", "/reset"])
+@bot.on.chat_message(text=["/сброс", "/reset"])  # type: ignore[misc]
 async def reset(message: Message) -> None:
     """Сброс базы данных администратором беседы."""
-    peer_id = message.peer_id
     try:
         members = await message.ctx_api.messages.get_conversation_members(
-            peer_id=peer_id
+            peer_id=message.peer_id
         )
     except VKAPIError[917]:
-        await message.answer(
-            "Не удалось проверить, являетесь ли вы администратором, "
-            + "потому что я не администратор."
+        await message.reply(
+            "Не удалось проверить, являетесь ли вы администратором,"
+            + " потому что я не администратор."
         )
         return
-    admins = [member.member_id for member in members.items if member.is_admin]
-    from_id = message.from_id
-    if from_id in admins:
+    admins = {member.member_id for member in members.items if member.is_admin}
+    if message.from_id in admins:
 
         # Удаление базы данных беседы
         try:
-            await remove(f"db/{peer_id}.txt")
+            await aos.remove(f"db/{message.peer_id}.txt", loop=bot.loop)
         except FileNotFoundError:
             pass
 
-        await message.answer(f"@id{from_id}, база данных успешно сброшена.")
+        reply = f"@id{message.from_id}, база данных успешно сброшена."
     else:
-        await message.answer(
-            "Сбрасывать базу данных могут только администраторы."
-        )
+        reply = "Сбрасывать базу данных могут только администраторы."
+    await message.reply(reply)
 
 
-@bot.on.chat_message(FromUserRule())
+@bot.on.chat_message(FromUserRule())  # type: ignore[misc]
 async def talk(message: Message) -> None:
     peer_id = message.peer_id
     text = message.text.lower()
     file_name = f"db/{peer_id}.txt"
 
     if text:
-        # Удаление пустых строк и преобразование [id1|@durov] в @id1
-        text = tag_pattern.sub(r"@\1", empty_line_pattern.sub("", text))
+        # Удаление пустых строк
+        text = empty_line_pattern.sub("", text)
+
+        # Преобразование [id1|@durov] в @id1
+        text = tag_pattern.sub(r"@\1", text)
 
         # Запись сообщения в историю беседы
-        async with open(file_name, "a", encoding="utf-8") as f:
+        async with aopen(file_name, "a", encoding="utf-8", loop=bot.loop) as f:
             await f.write(f"\n{text}")
-    elif not await exists(file_name):
+    elif not await aos.path.exists(file_name, loop=bot.loop):
         return
 
-    if randint(1, 100) > RESPONSE_CHANCE:
+    if random.randint(1, 100) > RESPONSE_CHANCE:
         return
 
     # Задержка перед ответом
-    await sleep(RESPONSE_DELAY)
+    await asyncio.sleep(RESPONSE_DELAY)
 
     # Чтение истории беседы
-    async with open(file_name, encoding="utf-8") as f:
+    async with aopen(file_name, encoding="utf-8", loop=bot.loop) as f:
         db = await f.read()
     db = db.strip().lower()
 
     # Генерация сообщения
-    text_model = NewlineText(input_text=db, well_formed=False, state_size=1)
-    sentence = text_model.make_sentence(tries=1000) or choice(db.splitlines())
+    text_model = markovify.NewlineText(
+        input_text=db, state_size=1, well_formed=False
+    )
+    sentence = text_model.make_sentence(tries=1000) or random.choice(
+        db.splitlines()
+    )
 
     await message.answer(sentence)
 
@@ -128,11 +131,9 @@ def main() -> None:
     else:
         uvloop.install()
 
-    try:
-        mkdir("db")
-    except FileExistsError:
-        pass
-
+    bot.loop_wrapper.on_startup.append(
+        aos.makedirs("db", exist_ok=True, loop=bot.loop)
+    )
     bot.run_forever()
 
 
