@@ -21,6 +21,10 @@ class Config(BaseModel):
     response_delay: NonNegativeFloat
     response_chance: float = Field(gt=0, le=100)
 
+    class Config:
+        anystr_strip_whitespace = True
+        validate_assignment = True
+
 
 def get_config() -> Config:
     config = ConfigParser()
