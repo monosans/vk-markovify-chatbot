@@ -101,7 +101,7 @@ async def talk(message: Message) -> None:
     elif not await aos.path.exists(file_name):
         return
 
-    if random.uniform(0, 100) > config.response_chance:
+    if random.random() * 100 > config.response_chance:
         return
 
     # Задержка перед ответом
