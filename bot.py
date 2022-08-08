@@ -28,9 +28,9 @@ class Config(BaseModel):
 
 
 def get_config() -> Config:
-    config = ConfigParser()
-    config.read("config.ini", encoding="utf-8")
-    cfg = config["DEFAULT"]
+    config_parser = ConfigParser()
+    config_parser.read("config.ini", encoding="utf-8")
+    cfg = config_parser["DEFAULT"]
     return Config(
         bot_token=cfg.get("BotToken"),
         response_delay=cfg.getfloat("ResponseDelay", 0),
@@ -75,7 +75,6 @@ async def reset(message: Message) -> None:
         return
     admins = {member.member_id for member in members.items if member.is_admin}
     if message.from_id in admins:
-
         # Удаление базы данных беседы
         try:
             await aos.remove(f"db/{message.peer_id}.txt")
@@ -102,7 +101,7 @@ async def talk(message: Message) -> None:
 
         # Запись сообщения в историю беседы
         async with aopen(file_name, "a", encoding="utf-8") as f:
-            await f.write(f"\n{text}")
+            await f.write("\n" + text)
     elif not await aos.path.exists(file_name):
         return
 
