@@ -41,7 +41,7 @@ def get_config() -> Config:
 config = get_config()
 bot = Bot(config.bot_token)
 bot.loop_wrapper.on_startup.append(aos.makedirs("db", exist_ok=True))
-tag_pattern = re.compile(r"\[(id\d+?)\|.+?\]")
+tag_pattern = re.compile(r"\[(\w+?\d+?)\|.+?\]")
 
 
 @bot.on.chat_message(  # type: ignore[misc]
