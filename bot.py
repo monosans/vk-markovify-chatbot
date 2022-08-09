@@ -42,7 +42,6 @@ config = get_config()
 bot = Bot(config.bot_token)
 bot.loop_wrapper.on_startup.append(aos.makedirs("db", exist_ok=True))
 tag_pattern = re.compile(r"\[(id\d+?)\|.+?\]")
-empty_line_pattern = re.compile(r"^\s+", flags=re.M)
 
 
 @bot.on.chat_message(  # type: ignore[misc]
@@ -89,15 +88,21 @@ async def reset(message: Message) -> None:
 
 @bot.on.chat_message(FromUserRule())  # type: ignore[misc]
 async def talk(message: Message) -> None:
-    text = message.text.lower()
+    text = message.text
     file_name = f"db/{message.peer_id}.txt"
 
     if text:
         # Удаление пустых строк
-        text = empty_line_pattern.sub("", text)
+        text = text.replace("\n\n", "\n")
+
+        # Удаление пробела в начале строк
+        text = text.replace("\n ", "\n")
 
         # Преобразование [id1|@durov] в @id1
         text = tag_pattern.sub(r"@\1", text)
+
+        # Преобразование в нижний регистр
+        text = text.lower()
 
         # Запись сообщения в историю беседы
         async with aopen(file_name, "a", encoding="utf-8") as f:
