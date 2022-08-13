@@ -5,12 +5,13 @@ import asyncio
 import logging
 import random
 import re
+import sys
 from configparser import ConfigParser
 
 import markovify
 from aiofiles import open as aopen
 from aiofiles import os as aos
-from pydantic import BaseModel, Field, NonNegativeFloat
+from pydantic import BaseModel, Field
 from vkbottle import VKAPIError
 from vkbottle.bot import Bot, Message
 from vkbottle.dispatch.rules.base import ChatActionRule, FromUserRule
@@ -19,7 +20,7 @@ from vkbottle_types.objects import MessagesMessageActionStatus
 
 class Config(BaseModel):
     bot_token: str = Field(min_length=1)
-    response_delay: NonNegativeFloat
+    response_delay: float = Field(ge=0)
     response_chance: float = Field(gt=0, le=100)
 
     class Config:
@@ -49,9 +50,11 @@ tag_pattern = re.compile(r"\[(\w+?\d+?)\|.+?\]")
 )
 async def invited(message: Message) -> None:
     """Приветствие при приглашении бота в беседу."""
-    if message.action is None or message.group_id is None:
-        return
-    if message.action.member_id == -message.group_id:
+    if (
+        message.action is not None
+        and message.group_id is not None
+        and message.action.member_id == -message.group_id
+    ):
         await message.answer(
             """Всем привет!
 Для работы мне нужно выдать доступ к переписке или права администратора.
@@ -106,7 +109,7 @@ async def talk(message: Message) -> None:
 
         # Запись сообщения в историю беседы
         async with aopen(file_name, "a", encoding="utf-8") as f:
-            await f.write("\n" + text)
+            await f.write(f"\n{text}")
     elif not await aos.path.exists(file_name):
         return
 
@@ -125,29 +128,29 @@ async def talk(message: Message) -> None:
     text_model = markovify.NewlineText(
         input_text=db, state_size=1, well_formed=False
     )
-    sentence = text_model.make_sentence(tries=1000) or random.choice(
+    sentence: str = text_model.make_sentence(tries=1000) or random.choice(
         db.splitlines()
     )
 
     await message.answer(sentence)
 
 
-def main() -> None:
+if __name__ == "__main__":
     logging.basicConfig(
         level=logging.INFO,
         format="%(asctime)s | %(levelname)s | %(message)s",
         datefmt="%Y-%m-%d %H:%M:%S",
     )
 
-    try:
-        import uvloop
-    except ImportError:
-        pass
-    else:
-        uvloop.install()
+    if sys.implementation.name == "cpython" and sys.platform in {
+        "darwin",
+        "linux",
+    }:
+        try:
+            import uvloop
+        except ImportError:
+            pass
+        else:
+            uvloop.install()
 
     bot.run_forever()
-
-
-if __name__ == "__main__":
-    main()
