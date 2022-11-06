@@ -136,10 +136,13 @@ async def talk(message: Message) -> None:
 
 
 if __name__ == "__main__":
+    # Remove the logging handler created by vkbottle
+    for handler in logging.root.handlers.copy():
+        logging.root.removeHandler(handler)
     logging.basicConfig(
-        level=logging.INFO,
         format="%(asctime)s | %(levelname)s | %(message)s",
         datefmt="%Y-%m-%d %H:%M:%S",
+        level=logging.INFO,
     )
 
     if sys.implementation.name == "cpython" and sys.platform in {
