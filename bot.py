@@ -9,8 +9,7 @@ import sys
 from configparser import ConfigParser
 
 import markovify
-from aiofiles import open as aopen
-from aiofiles import os as aos
+from aiofiles import open as aopen, os as aos
 from pydantic import BaseModel, Field
 from vkbottle import VKAPIError
 from vkbottle.bot import Bot, Message
