@@ -63,8 +63,7 @@ async def talk(message: Message) -> None:
     if random.random() * 100 > cfg.response_chance:
         return
 
-    await asyncio.sleep(cfg.response_delay)
-
     history = await db.get_history(message.peer_id)
     response = generate_text(history)
+    await asyncio.sleep(cfg.response_delay)
     await message.answer(response)
