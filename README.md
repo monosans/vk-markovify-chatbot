@@ -1,6 +1,6 @@
 # vk-markovify-chatbot
 
-Бот, генерирующий сообщения Марковским процессом на основе сообщений из беседы. Для каждой беседы ведёт отдельную историю сообщений в txt.
+Бот, генерирующий сообщения Марковским процессом на основе сообщений из чата. Для каждого чата ведёт отдельную историю сообщений в SQLite.
 
 ## Установка и запуск
 
@@ -36,8 +36,8 @@
     - На Unix-подобных ОС запускаем `start.sh`
   - Ручной:
     1. `cd` в распакованную папку
-    1. Устанавливаем зависимости командой `python -m pip install -U -r requirements.txt`
-    1. Запускаем командой `python bot.py`
+    1. Устанавливаем зависимости командой `python -m pip install --upgrade --no-cache-dir --disable-pip-version-check pip setuptools wheel; python -m pip install --requirement requirements.txt --upgrade --no-cache-dir --disable-pip-version-check`
+    1. Запускаем командой `python -m vk_markovify_chatbot`
 
 ## License / Лицензия
 
