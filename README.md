@@ -36,7 +36,7 @@
     - На Unix-подобных ОС запускаем `start.sh`
   - Ручной:
     1. `cd` в распакованную папку
-    1. Устанавливаем зависимости командой `python -m pip install -U --no-cache-dir --disable-pip-version-check pip setuptools wheel; python -m pip install -r requirements.txt -U --no-cache-dir --disable-pip-version-check`
+    1. Устанавливаем зависимости командой `python -m pip install -U --no-cache-dir --disable-pip-version-check pip setuptools wheel; python -m pip install -U --no-cache-dir --disable-pip-version-check -r requirements.txt`
     1. Запускаем командой `python -m vk_markovify_chatbot`
 
 ## License / Лицензия
