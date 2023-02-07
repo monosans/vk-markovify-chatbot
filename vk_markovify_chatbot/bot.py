@@ -16,7 +16,7 @@ bot = Bot(cfg.bot_token)
 bot.loop_wrapper.on_startup.append(db.init_db())
 
 
-@bot.on.chat_message(  # type: ignore[misc]
+@bot.on.chat_message(
     ChatActionRule(MessagesMessageActionStatus.CHAT_INVITE_USER.value)
 )
 async def invited(message: Message) -> None:
@@ -33,7 +33,7 @@ async def invited(message: Message) -> None:
         )
 
 
-@bot.on.chat_message(text=["/сброс", "/reset"])  # type: ignore[misc]
+@bot.on.chat_message(text=["/сброс", "/reset"])
 async def reset(message: Message) -> None:
     """Сброс базы данных администратором беседы."""
     try:
@@ -55,7 +55,7 @@ async def reset(message: Message) -> None:
     await message.reply(reply)
 
 
-@bot.on.chat_message(FromUserRule())  # type: ignore[misc]
+@bot.on.chat_message(FromUserRule())
 async def talk(message: Message) -> None:
     if message.text:
         await db.add_to_history(message.peer_id, message=message.text)
