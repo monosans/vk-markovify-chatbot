@@ -23,9 +23,7 @@ def clean_text(text: str) -> str:
 
 
 def generate_text(text: str) -> str:
-    text_model = markovify.NewlineText(
-        input_text=text, state_size=1, well_formed=False
-    )
+    text_model = markovify.NewlineText(input_text=text, state_size=1, well_formed=False)
     sentence: Optional[str] = text_model.make_sentence(tries=1000)
     if sentence is None:
         return random.choice(text.splitlines())

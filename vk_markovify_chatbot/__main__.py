@@ -5,10 +5,7 @@ import sys
 
 
 def install_uvloop() -> None:
-    if sys.implementation.name == "cpython" and sys.platform in {
-        "darwin",
-        "linux",
-    }:
+    if sys.implementation.name == "cpython" and sys.platform in {"darwin", "linux"}:
         try:
             import uvloop
         except ImportError:

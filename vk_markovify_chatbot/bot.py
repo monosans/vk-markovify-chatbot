@@ -16,9 +16,7 @@ bot = Bot(cfg.bot_token)
 bot.loop_wrapper.on_startup.append(db.init_db())
 
 
-@bot.on.chat_message(
-    ChatActionRule(MessagesMessageActionStatus.CHAT_INVITE_USER.value)
-)
+@bot.on.chat_message(ChatActionRule(MessagesMessageActionStatus.CHAT_INVITE_USER.value))
 async def invited(message: Message) -> None:
     """Приветствие при приглашении бота в беседу."""
     if (
@@ -43,7 +41,7 @@ async def reset(message: Message) -> None:
     except VKAPIError[917]:
         await message.reply(
             "Не удалось проверить, являетесь ли вы администратором,"
-            + " потому что я не администратор."
+            " потому что я не администратор."
         )
         return
     admins = {member.member_id for member in members.items if member.is_admin}
