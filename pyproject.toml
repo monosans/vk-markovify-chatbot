@@ -4,7 +4,6 @@ skip-magic-trailing-comma = true
 preview = true
 
 [tool.mypy]
-ignore_missing_imports = true
 python_version = "3.7"
 disallow_subclassing_any = false
 disallow_untyped_calls = false
@@ -21,6 +20,18 @@ enable_error_code = [
 ]
 strict = true
 plugins = ["pydantic.mypy"]
+
+[[tool.mypy.overrides]]
+module = "markovify.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "vkbottle.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "vkbottle_types.*"
+ignore_missing_imports = true
 
 [tool.pydantic-mypy]
 init_forbid_extra = true
