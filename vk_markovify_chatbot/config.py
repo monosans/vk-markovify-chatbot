@@ -7,9 +7,9 @@ from pydantic import BaseModel, Field
 
 
 class Config(BaseModel):
-    bot_token: str = Field(..., min_length=1)
-    response_delay: float = Field(..., ge=0)
-    response_chance: float = Field(..., gt=0, le=100)
+    bot_token: str = Field(min_length=1)
+    response_delay: float = Field(ge=0)
+    response_chance: float = Field(gt=0, le=100)
 
     class Config:
         anystr_strip_whitespace = True
