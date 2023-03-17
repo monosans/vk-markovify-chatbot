@@ -31,13 +31,47 @@
   1. Разрешать добавлять сообщество в беседы - ставим галочку
 - Устанавливаем [Python](https://python.org/downloads) (минимальная поддерживаемая версия - 3.7). Во время установки обязательно ставим галочку `Add Python to PATH (Добавить Python в PATH)`.
 - Устанавливаем зависимости и запускаем скрипт. Есть 2 способа сделать это:
+
   - Автоматический:
     - На Windows запускаем `start.cmd`
     - На Unix-подобных ОС запускаем `start.sh`
   - Ручной:
+    <details>
+      <summary>Windows (нажмите, чтобы развернуть)</summary>
+
     1. `cd` в распакованную папку
-    1. Устанавливаем зависимости командой `python -m pip install -U --no-cache-dir --disable-pip-version-check pip setuptools wheel; python -m pip install -U --no-cache-dir --disable-pip-version-check -r requirements.txt`
-    1. Запускаем командой `python -m vk_markovify_chatbot`
+
+    1. Устанавливаем зависимости командой:
+
+       ```bash
+       py -m pip install -U --no-cache-dir --disable-pip-version-check pip setuptools wheel; py -m pip install -U --no-cache-dir --disable-pip-version-check -r requirements.txt
+       ```
+
+    1. Запускаем командой:
+
+       ```bash
+       py -m vk_markovify_chatbot
+       ```
+
+    </details>
+    <details>
+      <summary>Unix-подобные ОС (нажмите, чтобы развернуть)</summary>
+
+    1. `cd` в распакованную папку
+
+    1. Устанавливаем зависимости командой:
+
+       ```bash
+       python3 -m pip install -U --no-cache-dir --disable-pip-version-check pip setuptools wheel && python3 -m pip install -U --no-cache-dir --disable-pip-version-check -r requirements.txt
+       ```
+
+    1. Запускаем командой:
+
+       ```bash
+       python3 -m vk_markovify_chatbot
+       ```
+
+    </details>
 
 ## License / Лицензия
 
