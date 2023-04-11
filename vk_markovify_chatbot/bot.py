@@ -36,7 +36,7 @@ async def reset(message: Message) -> None:
         members = await message.ctx_api.messages.get_conversation_members(
             peer_id=message.peer_id
         )
-    except VKAPIError[917]:  # noqa: B030
+    except VKAPIError[917]:
         await message.reply(
             "Не удалось проверить, являетесь ли вы администратором,"
             " потому что я не администратор."
