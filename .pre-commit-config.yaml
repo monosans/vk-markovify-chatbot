@@ -37,6 +37,6 @@ repos:
       - id: mypy
         args: []
         additional_dependencies:
-          - aiosqlite>=0.18,<0.19
+          - aiosqlite>=0.18,<0.20
           - pydantic>=1.9,<2
           - uvloop>=0.16,<0.18; implementation_name == 'cpython' and (sys_platform == 'darwin' or sys_platform == 'linux')
