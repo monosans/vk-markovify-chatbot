@@ -1,5 +1,7 @@
 # vk-markovify-chatbot
 
+[![CI](https://github.com/monosans/vk-markovify-chatbot/actions/workflows/ci.yml/badge.svg)](https://github.com/monosans/vk-markovify-chatbot/actions/workflows/ci.yml)
+
 Бот, генерирующий сообщения Марковским процессом на основе сообщений из чата. Для каждого чата ведёт отдельную историю сообщений в SQLite.
 
 ## Установка и запуск
@@ -29,7 +31,7 @@
   1. Настройки для бота
   1. Возможности ботов: Включены
   1. Разрешать добавлять сообщество в беседы - ставим галочку
-- Устанавливаем [Python](https://python.org/downloads) (минимальная поддерживаемая версия - 3.7). Во время установки обязательно ставим галочку `Add Python to PATH (Добавить Python в PATH)`.
+- Устанавливаем [Python](https://python.org/downloads) (минимальная требуемая версия - 3.7).
 - Устанавливаем зависимости и запускаем скрипт. Есть 2 способа сделать это:
 
   - Автоматический:
