@@ -6,7 +6,7 @@ from typing import Sequence
 
 import markovify
 
-tag_pattern = re.compile(r"\[(id\d+?)\|@[\d_a-z]+?\]")
+tag_pattern = re.compile(r"\[(id\d+?)\|.+?\]")
 
 
 def clean_text(text: str) -> str:
