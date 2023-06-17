@@ -7,9 +7,9 @@ from pydantic import BaseModel, Field
 
 
 class Config(BaseModel):
-    bot_token: str = Field(min_length=1)
-    response_delay: float = Field(ge=0)
-    response_chance: float = Field(gt=0, le=100)
+    bot_token: str = Field(alias="bottoken", min_length=1)
+    response_delay: float = Field(alias="responsedelay", ge=0)
+    response_chance: float = Field(alias="responsechance", gt=0, le=100)
 
     class Config:
         anystr_strip_whitespace = True
@@ -19,9 +19,4 @@ class Config(BaseModel):
 def from_ini(file_name: AnyStr) -> Config:
     config_parser = ConfigParser()
     config_parser.read(file_name, encoding="utf-8")
-    cfg = config_parser["DEFAULT"]
-    return Config(
-        bot_token=cfg.get("BotToken"),
-        response_delay=cfg.getfloat("ResponseDelay", 0),
-        response_chance=cfg.getfloat("ResponseChance", 100),
-    )
+    return Config.parse_obj(config_parser["DEFAULT"])
