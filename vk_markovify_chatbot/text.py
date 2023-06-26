@@ -6,6 +6,7 @@ from typing import Sequence
 
 import markovify
 
+MAX_MSG_LENGTH = 4096
 tag_pattern = re.compile(r"\[(id\d+?)\|.+?\]")
 
 
@@ -26,4 +27,6 @@ def generate_text(history: Sequence[str]) -> str:
     text_model = markovify.NewlineText(
         input_text="\n".join(history), state_size=1, well_formed=False
     )
-    return text_model.make_sentence(tries=1000) or random.choice(history)
+    return text_model.make_short_sentence(
+        max_chars=MAX_MSG_LENGTH, tries=100
+    ) or random.choice(history)
