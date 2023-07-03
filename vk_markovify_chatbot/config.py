@@ -6,7 +6,7 @@ from typing import AnyStr
 try:
     from pydantic.v1 import BaseModel, Field
 except ImportError:
-    from pydantic import BaseModel, Field
+    from pydantic import BaseModel, Field  # type: ignore[assignment]
 
 
 class Config(BaseModel):
