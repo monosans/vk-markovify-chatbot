@@ -3,7 +3,10 @@ from __future__ import annotations
 from configparser import ConfigParser
 from typing import AnyStr
 
-from pydantic import BaseModel, Field
+try:
+    from pydantic.v1 import BaseModel, Field
+except ImportError:
+    from pydantic import BaseModel, Field
 
 
 class Config(BaseModel):

@@ -38,5 +38,5 @@ repos:
           - --scripts-are-modules
         additional_dependencies:
           - aiosqlite<0.20
-          - pydantic<2
+          - pydantic<3
           - uvloop<0.18; implementation_name == "cpython" and (sys_platform == "darwin" or sys_platform == "linux")
