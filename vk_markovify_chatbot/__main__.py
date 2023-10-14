@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import asyncio
 import logging
 import sys
 
@@ -14,7 +15,9 @@ def install_uvloop() -> None:
         except ImportError:
             pass
         else:
-            uvloop.install()  # type: ignore[attr-defined]
+            asyncio.set_event_loop_policy(
+                uvloop.EventLoopPolicy()  # type: ignore[attr-defined]
+            )
 
 
 def configure_logging() -> None:
