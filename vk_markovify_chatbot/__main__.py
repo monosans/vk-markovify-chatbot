@@ -14,7 +14,7 @@ def install_uvloop() -> None:
         except ImportError:
             pass
         else:
-            uvloop.install()
+            uvloop.install()  # type: ignore[attr-defined]
 
 
 def configure_logging() -> None:
