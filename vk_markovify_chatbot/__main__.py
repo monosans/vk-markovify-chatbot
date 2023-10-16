@@ -5,8 +5,10 @@ import logging
 import sys
 
 
-def install_uvloop() -> None:
-    if sys.implementation.name == "cpython" and sys.platform in {
+def set_event_loop_policy() -> None:
+    if sys.platform == "win32":
+        asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+    elif sys.implementation.name == "cpython" and sys.platform in {
         "darwin",
         "linux",
     }:
@@ -29,7 +31,7 @@ def configure_logging() -> None:
 
 
 def main() -> None:
-    install_uvloop()
+    set_event_loop_policy()
     configure_logging()
 
     from .bot import bot
