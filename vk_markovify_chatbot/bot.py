@@ -26,9 +26,11 @@ async def invited(message: Message) -> None:
         and message.group_id is not None
         and message.action.member_id == -message.group_id
     ):
-        await message.answer("""Всем привет!
+        await message.answer(
+            """Всем привет!
 Для работы мне нужно выдать доступ к переписке или права администратора.
-Для сброса базы данных используйте команды /сброс или /reset.""")
+Для сброса базы данных используйте команды /сброс или /reset."""
+        )
 
 
 @bot.on.chat_message(text=["/сброс", "/reset"])
