@@ -23,7 +23,7 @@ def set_event_loop_policy() -> None:
 def configure_logging() -> None:
     logging.basicConfig(
         format="%(asctime)s | %(levelname)s | %(message)s",
-        datefmt="%Y-%m-%d %H:%M:%S",
+        datefmt=logging.Formatter.default_time_format,
         level=logging.INFO,
     )
 
