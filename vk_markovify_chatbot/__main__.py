@@ -13,7 +13,7 @@ def set_event_loop_policy() -> None:
         "linux",
     }:
         try:
-            import uvloop
+            import uvloop  # noqa: PLC0415
         except ImportError:
             pass
         else:
@@ -32,7 +32,7 @@ def main() -> None:
     set_event_loop_policy()
     configure_logging()
 
-    from .bot import bot
+    from .bot import bot  # noqa: PLC0415
 
     bot.run_forever()
 
