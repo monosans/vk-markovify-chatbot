@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 from configparser import ConfigParser
-from typing import AnyStr
+from pathlib import Path
+
+from .utils import bytes_decode
 
 try:
     from pydantic.v1 import BaseModel, Field
@@ -19,7 +21,8 @@ class Config(BaseModel):
         validate_assignment = True
 
 
-def from_ini(file_name: AnyStr) -> Config:
+def from_ini(file_name: str) -> Config:
+    content = bytes_decode(Path(file_name).read_bytes())
     config_parser = ConfigParser()
-    config_parser.read(file_name, encoding="utf-8")
+    config_parser.read_string(content)
     return Config.parse_obj(config_parser["DEFAULT"])
