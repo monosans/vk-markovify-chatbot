@@ -1,28 +1,59 @@
 from __future__ import annotations
 
-from configparser import ConfigParser
+import sys
 from pathlib import Path
+from typing import TYPE_CHECKING, Mapping
+
+import attrs
+from typing_extensions import Any, Self
 
 from .utils import bytes_decode
 
-try:
-    from pydantic.v1 import BaseModel, Field
-except ImportError:
-    from pydantic import BaseModel, Field  # type: ignore[assignment]
+if sys.version_info >= (3, 11):
+    try:
+        import tomllib
+    except ImportError:
+        # Help users on older alphas
+        if not TYPE_CHECKING:
+            import tomli as tomllib
+else:
+    import tomli as tomllib
 
 
-class Config(BaseModel):
-    bot_token: str = Field(alias="bottoken", min_length=1)
-    response_delay: float = Field(alias="responsedelay", ge=0)
-    response_chance: float = Field(alias="responsechance", gt=0, le=100)
+@attrs.define(
+    repr=False,
+    weakref_slot=False,
+    kw_only=True,
+    eq=False,
+    getstate_setstate=False,
+    match_args=False,
+)
+class Config:
+    bot_token: str = attrs.field(
+        validator=attrs.validators.and_(
+            attrs.validators.instance_of(str), attrs.validators.min_len(1)
+        )
+    )
+    response_delay: float = attrs.field(
+        converter=float, validator=attrs.validators.ge(0)
+    )
+    response_chance: float = attrs.field(
+        converter=float,
+        validator=attrs.validators.and_(
+            attrs.validators.gt(0), attrs.validators.le(100)
+        ),
+    )
 
-    class Config:
-        anystr_strip_whitespace = True
-        validate_assignment = True
+    @classmethod
+    def from_mapping(cls, mapping: Mapping[str, Any], /) -> Self:
+        return cls(
+            bot_token=mapping["bot_token"],
+            response_delay=mapping["response_delay"],
+            response_chance=mapping["response_chance"],
+        )
 
 
-def from_ini(file_name: str) -> Config:
-    content = bytes_decode(Path(file_name).read_bytes())
-    config_parser = ConfigParser()
-    config_parser.read_string(content)
-    return Config.parse_obj(config_parser["DEFAULT"])
+def from_toml(file_name: str, /) -> Config:
+    content = Path(file_name).read_bytes()
+    config = tomllib.loads(bytes_decode(content))
+    return Config.from_mapping(config)

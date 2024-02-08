@@ -1,0 +1,13 @@
+services:
+  app:
+    image: vk_markovify_chatbot
+    build:
+      context: .
+      args:
+        - GID=${GID:-1000}
+        - UID=${UID:-1000}
+    volumes:
+      - vk_markovify_chatbot_data:/home/app/.local/share/vk_markovify_chatbot
+      - ./config.toml:/app/config.toml
+volumes:
+  vk_markovify_chatbot_data:

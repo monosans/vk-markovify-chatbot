@@ -3,16 +3,25 @@ from __future__ import annotations
 import asyncio
 import random
 
-from vkbottle import VKAPIError
+from aiohttp import TCPConnector
+from vkbottle import API, AiohttpClient, VKAPIError
 from vkbottle.bot import Bot, Message
 from vkbottle.dispatch.rules.base import ChatActionRule, FromUserRule
 from vkbottle_types.objects import MessagesMessageActionStatus
 
-from . import config, db
+from . import config, db, http
 from .text import generate_text
 
-cfg = config.from_ini("config.ini")
-bot = Bot(cfg.bot_token)
+cfg = config.from_toml("config.toml")
+bot = Bot(
+    api=API(
+        token=cfg.bot_token,
+        http_client=AiohttpClient(
+            connector=TCPConnector(ssl=http.SSL_CONTEXT),
+            fallback_charset_resolver=http.fallback_charset_resolver,
+        ),
+    )
+)
 bot.loop_wrapper.on_startup.append(db.init_db())
 
 
@@ -46,7 +55,7 @@ async def reset(message: Message) -> None:
         return
     admins = {member.member_id for member in members.items if member.is_admin}
     if message.from_id in admins:
-        await db.clean_history(message.peer_id)
+        await db.clean_history(peer_id=message.peer_id)
         reply = f"@id{message.from_id}, база данных успешно сброшена."
     else:
         reply = "Сбрасывать базу данных могут только администраторы."
@@ -56,12 +65,12 @@ async def reset(message: Message) -> None:
 @bot.on.chat_message(FromUserRule())
 async def talk(message: Message) -> None:
     if message.text:
-        await db.add_to_history(message.peer_id, message=message.text)
+        await db.add_to_history(peer_id=message.peer_id, message=message.text)
 
     if random.random() * 100 > cfg.response_chance:
         return
 
-    history = await db.get_history(message.peer_id)
-    response = generate_text(history)
+    history = await db.get_history(peer_id=message.peer_id)
+    response = generate_text(history=history)
     await asyncio.sleep(cfg.response_delay)
     await message.answer(response)
