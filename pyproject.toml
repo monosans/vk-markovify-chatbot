@@ -16,6 +16,7 @@ python = "^3.8"
 aiodns = { version = ">=1.1,<4", optional = true }
 aiohttp = "^3.8.6"
 aiosqlite = ">=0.18,<0.20"
+attrs = ">=21.3"
 brotli = { version = "^1", markers = "implementation_name == 'cpython'" }
 brotlicffi = { version = "<2", markers = "implementation_name != 'cpython'" }
 certifi = "*"

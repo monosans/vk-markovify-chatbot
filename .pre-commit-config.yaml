@@ -36,6 +36,7 @@ repos:
         additional_dependencies:
           - aiohttp<4
           - aiosqlite<0.20
+          - attrs
           - certifi
           - charset-normalizer<4
           - platformdirs<5
