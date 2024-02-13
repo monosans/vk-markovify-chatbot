@@ -25,6 +25,7 @@ def configure_logging() -> None:
         format="%(asctime)s | %(levelname)s | %(message)s",
         datefmt=logging.Formatter.default_time_format,
         level=logging.INFO,
+        force=True,
     )
 
 
