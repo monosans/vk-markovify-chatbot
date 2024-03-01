@@ -34,7 +34,7 @@ termux = []
 
 [tool.poetry.group.dev.dependencies]
 mypy = "1.8.0"
-ruff = "0.2.2"
+ruff = "0.3.0"
 tomli = "2.0.1"
 
 [tool.poetry.group.nuitka]
