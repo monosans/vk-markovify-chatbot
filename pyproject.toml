@@ -33,8 +33,8 @@ non-termux = ["aiodns", "uvloop"]
 termux = []
 
 [tool.poetry.group.dev.dependencies]
-mypy = "1.8.0"
-ruff = "0.3.1"
+mypy = "1.9.0"
+ruff = "0.3.2"
 tomli = "2.0.1"
 
 [tool.poetry.group.nuitka]
