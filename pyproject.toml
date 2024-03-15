@@ -41,4 +41,4 @@ tomli = "2.0.1"
 optional = true
 
 [tool.poetry.group.nuitka.dependencies]
-nuitka = "2.1.1"
+nuitka = "2.1.2"
