@@ -34,7 +34,7 @@
 
 ### Исполняемый файл
 
-Это самый простой способ, но он доступен только для x86_64 Windows, macOS и Linux. Просто скачайте архив для вашей ОС с [nightly.link](https://nightly.link/monosans/vk-markovify-chatbot/workflows/ci/main?preview), распакуйте его, отредактируйте `config.toml` и запустите исполняемый файл.
+Это самый простой способ, но он доступен только для x86_64 Windows, x86_64/arm64 macOS и x86_64 Linux. Просто скачайте архив для вашей ОС с [nightly.link](https://nightly.link/monosans/vk-markovify-chatbot/workflows/ci/main?preview), распакуйте его, отредактируйте `config.toml` и запустите исполняемый файл.
 
 Если Защитник Windows обнаружит исполняемый файл как вирус, прочтите [это](https://github.com/Nuitka/Nuitka/issues/2495#issuecomment-1762836583).
 
