@@ -36,6 +36,8 @@
 
 Это самый простой способ, но он доступен только для x86-64 Windows, x86-64/arm64 macOS и x86-64 Linux. Просто скачайте архив для вашей ОС с [nightly.link](https://nightly.link/monosans/vk-markovify-chatbot/workflows/ci/main?preview), распакуйте его, отредактируйте `config.toml` и запустите исполняемый файл `vk_markovify_chatbot`.
 
+Если антивирус Windows определяет исполняемый файл как вирус, пожалуйста, прочтите [это](https://github.com/Nuitka/Nuitka/issues/2495#issuecomment-1762836583).
+
 ### Docker
 
 - [Установите `Docker Compose`](https://docs.docker.com/compose/install/).
