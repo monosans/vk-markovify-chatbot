@@ -15,19 +15,20 @@ classifiers = ["Private :: Do Not Upload"]
 python = "^3.8"
 aiodns = { version = ">=1.1,<4", optional = true }
 aiohttp = ">=3.8.6,<4"
-aiosqlite = ">=0.18,<0.21"
+aiosqlite = ">=0.14,<0.21"
 attrs = ">=21.3"
 brotli = { version = ">=1,<2", markers = "implementation_name == 'cpython'" }
 brotlicffi = { version = "<2", markers = "implementation_name != 'cpython'" }
 certifi = "*"
 charset-normalizer = ">=2,<4"
-markovify = ">=0.9,<0.10"
+markovify = ">=0.6,<0.10"
 platformdirs = "<5"
+rich = ">=10.2,<14"
 tomli = { version = "<3", python = "<3.11" }
 typing-extensions = ">=4.4,<5"
 uvloop = { version = ">=0.14,<0.20", optional = true, markers = "implementation_name == 'cpython' and (sys_platform == 'darwin' or sys_platform == 'linux')" }
-winloop = { version = "<0.1.5", markers = "implementation_name == 'cpython' and (sys_platform == 'cygwin' or sys_platform == 'win32')" }
 vkbottle = ">=4,<5"
+winloop = { version = "<0.1.5", markers = "implementation_name == 'cpython' and (sys_platform == 'cygwin' or sys_platform == 'win32')" }
 
 [tool.poetry.extras]
 non-termux = ["aiodns", "uvloop"]
