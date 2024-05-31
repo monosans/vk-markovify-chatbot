@@ -40,6 +40,7 @@ repos:
           - certifi
           - charset-normalizer<4
           - platformdirs<5
+          - rich<14
           - tomli<3
           - typing-extensions<5
           - uvloop<0.20; implementation_name == "cpython" and (sys_platform == "darwin" or sys_platform == "linux")
