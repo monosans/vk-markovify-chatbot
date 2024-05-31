@@ -22,7 +22,6 @@ bot = Bot(
         ),
     )
 )
-bot.loop_wrapper.on_startup.append(db.init_db())
 
 
 @bot.on.chat_message(

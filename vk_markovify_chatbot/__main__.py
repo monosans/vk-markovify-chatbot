@@ -3,32 +3,37 @@ from __future__ import annotations
 import asyncio
 import logging
 import sys
+from typing import Coroutine
+
+from typing_extensions import Any, TypeVar
+
+T = TypeVar("T")
 
 
-def set_event_loop_policy() -> None:
+def async_run(main: Coroutine[Any, Any, T]) -> T:
     if sys.implementation.name == "cpython":
-        if sys.platform in {"cygwin", "win32"}:
-            try:
-                import winloop  # type: ignore[import-not-found]  # noqa: PLC0415
-            except ImportError:
-                pass
-            else:
-                try:
-                    policy = winloop.EventLoopPolicy()
-                except AttributeError:
-                    policy = winloop.WinLoopPolicy()
-                asyncio.set_event_loop_policy(policy)
-                return
-        elif sys.platform in {"darwin", "linux"}:
-            try:
-                import uvloop  # noqa: PLC0415
-            except ImportError:
-                pass
-            else:
-                asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
-                return
+        try:
+            import uvloop  # type: ignore[import-not-found, unused-ignore]  # noqa: PLC0415
+        except ImportError:
+            pass
+        else:
+            if hasattr(uvloop, "run"):
+                return uvloop.run(main)  # type: ignore[no-any-return, unused-ignore]
+            uvloop.install()
+            return asyncio.run(main)
+
+        try:
+            import winloop  # type: ignore[import-not-found, unused-ignore]  # noqa: PLC0415
+        except ImportError:
+            pass
+        else:
+            if hasattr(winloop, "run"):
+                return winloop.run(main)  # type: ignore[no-any-return, unused-ignore]
+            winloop.install()
+            return asyncio.run(main)
     if sys.platform == "win32":
         asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+    return asyncio.run(main)
 
 
 def configure_logging() -> None:
@@ -40,14 +45,14 @@ def configure_logging() -> None:
     )
 
 
-def main() -> None:
-    set_event_loop_policy()
+async def main() -> None:
     configure_logging()
 
-    from .bot import bot  # noqa: PLC0415
+    from . import bot, db  # noqa: PLC0415
 
-    bot.run_forever()
+    await db.init_db()
+    await bot.bot.run_polling()
 
 
 if __name__ == "__main__":
-    main()
+    async_run(main())
