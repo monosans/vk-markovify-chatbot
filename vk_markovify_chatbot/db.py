@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import logging
 import stat
-from typing import List
 
 import aiosqlite
 import platformdirs
@@ -40,7 +39,7 @@ async def init_db() -> None:
     logger.info("The database is stored in %s", DB_PATH)
 
 
-async def get_history(*, peer_id: int) -> List[str]:
+async def get_history(*, peer_id: int) -> list[str]:
     sql = "SELECT message FROM history WHERE peer_id = ?"
     params = (peer_id,)
     async with connect() as cn, cn.execute(sql, params) as cursor:

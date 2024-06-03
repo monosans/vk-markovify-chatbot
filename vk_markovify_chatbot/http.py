@@ -1,12 +1,15 @@
 from __future__ import annotations
 
 import ssl
+from typing import TYPE_CHECKING
 
 import certifi
 import charset_normalizer
-from aiohttp import ClientResponse
 
 from .utils import bytes_decode
+
+if TYPE_CHECKING:
+    from aiohttp import ClientResponse
 
 SSL_CONTEXT = ssl.create_default_context(cafile=certifi.where())
 
