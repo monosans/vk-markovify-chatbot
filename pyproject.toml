@@ -37,7 +37,7 @@ termux = []
 mypy = "1.10.1"
 ruff = "0.5.1"
 tomli = "2.0.1"
-# ">=4.4,<5" in runtime
+# ">=4.4,<5" at runtime
 typing-extensions = "4.12.2"
 
 [tool.poetry.group.nuitka]
