@@ -2,12 +2,16 @@ from __future__ import annotations
 
 import sys
 from pathlib import Path
-from typing import TYPE_CHECKING, Mapping
+from typing import TYPE_CHECKING
 
 import attrs
-from typing_extensions import Any, Self
 
 from .utils import bytes_decode
+
+if TYPE_CHECKING:
+    from typing import Mapping
+
+    from typing_extensions import Any, Self
 
 if sys.version_info >= (3, 11):
     try:

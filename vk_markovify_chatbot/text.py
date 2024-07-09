@@ -2,9 +2,12 @@ from __future__ import annotations
 
 import random
 import re
-from typing import Sequence
+from typing import TYPE_CHECKING
 
 import markovify
+
+if TYPE_CHECKING:
+    from typing import Sequence
 
 MAX_MSG_LENGTH = 4096
 tag_pattern = re.compile(r"\[(id\d+?)\|.+?\]")

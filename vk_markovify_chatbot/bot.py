@@ -2,15 +2,19 @@ from __future__ import annotations
 
 import asyncio
 import random
+from typing import TYPE_CHECKING
 
 from aiohttp import TCPConnector
 from vkbottle import API, AiohttpClient, VKAPIError
-from vkbottle.bot import Bot, Message
+from vkbottle.bot import Bot
 from vkbottle.dispatch.rules.base import ChatActionRule, FromUserRule
 from vkbottle_types.objects import MessagesMessageActionStatus
 
 from . import config, db, http
 from .text import generate_text
+
+if TYPE_CHECKING:
+    from vkbottle.bot import Message
 
 cfg = config.from_toml("config.toml")
 bot = Bot(

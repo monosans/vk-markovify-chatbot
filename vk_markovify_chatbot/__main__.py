@@ -3,12 +3,17 @@ from __future__ import annotations
 import asyncio
 import logging
 import sys
-from typing import Callable, Coroutine
+from typing import TYPE_CHECKING
 
 import rich.traceback
 from rich.console import Console
 from rich.logging import RichHandler
-from typing_extensions import Any, TypeVar
+from typing_extensions import TypeVar
+
+if TYPE_CHECKING:
+    from typing import Callable, Coroutine
+
+    from typing_extensions import Any
 
 T = TypeVar("T")
 
