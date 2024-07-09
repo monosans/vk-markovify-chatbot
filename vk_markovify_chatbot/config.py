@@ -8,11 +8,6 @@ import attrs
 
 from .utils import bytes_decode
 
-if TYPE_CHECKING:
-    from typing import Mapping
-
-    from typing_extensions import Any, Self
-
 if sys.version_info >= (3, 11):
     try:
         import tomllib
@@ -22,6 +17,11 @@ if sys.version_info >= (3, 11):
             import tomli as tomllib
 else:
     import tomli as tomllib
+
+if TYPE_CHECKING:
+    from typing import Mapping
+
+    from typing_extensions import Any, Self
 
 
 @attrs.define(

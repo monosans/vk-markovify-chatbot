@@ -5,13 +5,14 @@ import functools
 from typing import TYPE_CHECKING
 
 import charset_normalizer
-from typing_extensions import ParamSpec, TypeVar
 
 if TYPE_CHECKING:
     from typing import Callable
 
-T = TypeVar("T")
-P = ParamSpec("P")
+    from typing_extensions import ParamSpec, TypeVar
+
+    T = TypeVar("T")
+    P = ParamSpec("P")
 
 
 def bytes_decode(b: bytes, /) -> str:

@@ -8,14 +8,13 @@ from typing import TYPE_CHECKING
 import rich.traceback
 from rich.console import Console
 from rich.logging import RichHandler
-from typing_extensions import TypeVar
 
 if TYPE_CHECKING:
     from typing import Callable, Coroutine
 
-    from typing_extensions import Any
+    from typing_extensions import Any, TypeVar
 
-T = TypeVar("T")
+    T = TypeVar("T")
 
 
 def get_async_run() -> Callable[[Coroutine[Any, Any, T]], T]:
