@@ -64,7 +64,7 @@
 
 Чтобы использовать `vk-markovify-chatbot` в Termux, необходимо знание интерфейса командной строки Unix.
 
-- Загрузите Termux с сайта [F-Droid](https://f-droid.org/en/packages/com.termux/). [Не загружайте его из Google Play](https://github.com/termux/termux-app#google-play-store-deprecated).
+- Загрузите Termux с сайта [F-Droid](https://f-droid.org/en/packages/com.termux/). [Не загружайте его из Google Play](https://github.com/termux/termux-app#google-play-store-experimental-branch).
 - Выполните следующую команду (она автоматически обновит пакеты Termux, установит Python, а также загрузит и установит `vk-markovify-chatbot`):
 
   ```bash
