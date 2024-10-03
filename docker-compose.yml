@@ -1,6 +1,5 @@
 services:
   app:
-    image: vk_markovify_chatbot
     build: .
     volumes:
       - vk_markovify_chatbot_data:/home/app/.local/share/vk_markovify_chatbot
