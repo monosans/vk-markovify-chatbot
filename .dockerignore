@@ -1,4 +1,4 @@
 **
 !vk_markovify_chatbot/**/*.py
-!poetry.lock
 !pyproject.toml
+!uv.lock
