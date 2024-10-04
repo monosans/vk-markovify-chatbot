@@ -35,7 +35,7 @@ repos:
           - --scripts-are-modules
         additional_dependencies:
           - aiohttp<4
-          - aiosqlite<0.20
+          - aiosqlite<0.21
           - attrs
           - certifi
           - charset-normalizer<4
@@ -43,5 +43,5 @@ repos:
           - rich<14
           - tomli<3
           - typing-extensions<5
-          - uvloop<0.20; implementation_name == "cpython" and (sys_platform == "darwin" or sys_platform == "linux")
-          - winloop<0.1.5; implementation_name == "cpython" and (sys_platform == "cygwin" or sys_platform == "win32")
+          - uvloop<0.21; implementation_name=='cpython' and (sys_platform=='darwin' or sys_platform=='linux')
+          - winloop<0.1.7; implementation_name=='cpython' and (sys_platform=='cygwin' or sys_platform=='win32')
