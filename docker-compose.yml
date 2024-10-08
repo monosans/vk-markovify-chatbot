@@ -1,6 +1,7 @@
 services:
   app:
     build: .
+    tty: true
     volumes:
       - vk_markovify_chatbot_data:/home/app/.local/share/vk_markovify_chatbot
       - ./config.toml:/app/config.toml
