@@ -10,7 +10,8 @@ from rich.console import Console
 from rich.logging import RichHandler
 
 if TYPE_CHECKING:
-    from typing import Callable, Coroutine
+    from collections.abc import Coroutine
+    from typing import Callable
 
     from typing_extensions import Any, TypeVar
 

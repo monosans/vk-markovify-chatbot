@@ -53,7 +53,7 @@
 
 #### ПК
 
-- Установите [Python](https://python.org/downloads). Минимальная необходимая версия - 3.8.
+- Установите [Python](https://python.org/downloads). Минимальная необходимая версия - 3.9.
 - Скачайте и распакуйте [архив с программой](https://github.com/monosans/vk-markovify-chatbot/archive/refs/heads/main.zip).
 - Отредактируйте `config.toml`.
 - Запустите скрипт, который устанавливает зависимости и запускает `vk-markovify-chatbot`:

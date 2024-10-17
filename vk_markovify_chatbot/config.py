@@ -19,7 +19,7 @@ else:
     import tomli as tomllib
 
 if TYPE_CHECKING:
-    from typing import Mapping
+    from collections.abc import Mapping
 
     from typing_extensions import Any, Self
 
