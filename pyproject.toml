@@ -34,7 +34,7 @@ urls.repository = "https://github.com/monosans/vk-markovify-chatbot"
 [tool.uv]
 dev-dependencies = [
   "mypy[faster-cache]==1.13",
-  "ruff==0.7",
+  "ruff==0.7.1",
   "tomli==2.0.2",
   "typing-extensions==4.12.2",
 ]
