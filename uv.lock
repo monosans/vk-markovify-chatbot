@@ -1380,9 +1380,6 @@ non-termux = [
     { name = "aiodns" },
     { name = "uvloop", marker = "(implementation_name == 'cpython' and sys_platform == 'darwin') or (implementation_name == 'cpython' and sys_platform == 'linux')" },
 ]
-nuitka = [
-    { name = "nuitka" },
-]
 
 [package.dependency-groups]
 dev = [
@@ -1390,6 +1387,9 @@ dev = [
     { name = "ruff" },
     { name = "tomli" },
     { name = "typing-extensions" },
+]
+nuitka = [
+    { name = "nuitka" },
 ]
 
 [package.metadata]
@@ -1403,7 +1403,6 @@ requires-dist = [
     { name = "certifi" },
     { name = "charset-normalizer", specifier = ">=2,<4" },
     { name = "markovify", specifier = ">=0.6,<0.10" },
-    { name = "nuitka", marker = "extra == 'nuitka'", specifier = "==2.4.11" },
     { name = "platformdirs", specifier = "<5" },
     { name = "rich", specifier = ">=10.2,<14" },
     { name = "tomli", marker = "python_full_version < '3.11'", specifier = "<3" },
@@ -1419,6 +1418,7 @@ dev = [
     { name = "tomli", specifier = "==2.0.2" },
     { name = "typing-extensions", specifier = "==4.12.2" },
 ]
+nuitka = [{ name = "nuitka", specifier = "==2.4.11" }]
 
 [[package]]
 name = "vkbottle"
