@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import asyncio
 import logging
 import stat
 
@@ -8,7 +9,6 @@ import platformdirs
 
 from .fs import add_permission, create_or_fix_dir
 from .text import clean_text
-from .utils import asyncify
 
 logger = logging.getLogger(__name__)
 DB_PATH = platformdirs.user_data_path("vk_markovify_chatbot") / "db.sqlite3"
@@ -19,13 +19,16 @@ def connect() -> aiosqlite.Connection:
 
 
 async def init_db() -> None:
-    if await asyncify(DB_PATH.is_file)():
-        await asyncify(add_permission)(DB_PATH, stat.S_IRUSR | stat.S_IWUSR)
-    elif await asyncify(DB_PATH.exists)():
+    if await asyncio.to_thread(DB_PATH.is_file):
+        await asyncio.to_thread(
+            add_permission, DB_PATH, stat.S_IRUSR | stat.S_IWUSR
+        )
+    elif await asyncio.to_thread(DB_PATH.exists):
         msg = f"{DB_PATH} must be a file"
         raise ValueError(msg)
     else:
-        await asyncify(create_or_fix_dir)(
+        await asyncio.to_thread(
+            create_or_fix_dir,
             DB_PATH.parent,
             permission=stat.S_IRUSR | stat.S_IWUSR | stat.S_IXUSR,
         )
