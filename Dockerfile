@@ -36,9 +36,9 @@ RUN apt-get update \
   && groupadd --gid 1000 app \
   && useradd --gid 1000 --no-log-init --create-home --uid 1000 app \
   && mkdir -p /home/app/.local/share/vk_markovify_chatbot \
-  && chown app:app /home/app/.local/share/vk_markovify_chatbot
+  && chown 1000:1000 /home/app/.local/share/vk_markovify_chatbot
 
-COPY --from=python-build-stage --chown=app:app --link /app/.venv /app/.venv
+COPY --from=python-build-stage --chown=1000:1000 --link /app/.venv /app/.venv
 
 ENV PATH="/app/.venv/bin:$PATH"
 
@@ -46,7 +46,7 @@ ENV IS_DOCKER=1
 
 USER app
 
-COPY --chown=app:app . .
+COPY --chown=1000:1000 . .
 
 ENTRYPOINT ["tini", "--"]
 
