@@ -10,7 +10,7 @@ import platformdirs
 from .fs import add_permission, create_or_fix_dir
 from .text import clean_text
 
-logger = logging.getLogger(__name__)
+_logger = logging.getLogger(__name__)
 DB_PATH = platformdirs.user_data_path("vk_markovify_chatbot") / "db.sqlite3"
 
 
@@ -39,7 +39,7 @@ async def init_db() -> None:
     """
     async with connect() as cn, cn.executescript(sql):
         pass
-    logger.info("The database is stored in %s", DB_PATH)
+    _logger.info("The database is stored in %s", DB_PATH)
 
 
 async def get_history(*, peer_id: int) -> list[str]:

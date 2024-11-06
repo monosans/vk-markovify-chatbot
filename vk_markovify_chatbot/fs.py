@@ -6,7 +6,7 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from pathlib import Path
 
-logger = logging.getLogger(__name__)
+_logger = logging.getLogger(__name__)
 
 
 def add_permission(
@@ -17,7 +17,7 @@ def add_permission(
         new_permissions = current_permissions | permission
         if current_permissions != new_permissions:
             path.chmod(new_permissions)
-            logger.info(
+            _logger.info(
                 "Changed permissions of %s from %o to %o",
                 path,
                 current_permissions,

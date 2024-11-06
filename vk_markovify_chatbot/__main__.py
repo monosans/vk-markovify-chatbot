@@ -1,13 +1,13 @@
+# ruff: noqa: E402
 from __future__ import annotations
 
+from . import logs
+
+_logs_listener = logs.configure()
+
 import asyncio
-import logging
 import sys
 from typing import TYPE_CHECKING
-
-import rich.traceback
-from rich.console import Console
-from rich.logging import RichHandler
 
 if TYPE_CHECKING:
     from collections.abc import Coroutine
@@ -46,31 +46,7 @@ def get_async_run() -> Callable[[Coroutine[Any, Any, T]], T]:
     return asyncio.run
 
 
-def configure_logging() -> None:
-    console = Console()
-    rich.traceback.install(
-        console=console, width=None, extra_lines=0, word_wrap=True
-    )
-    logging.basicConfig(
-        format="%(message)s",
-        datefmt=logging.Formatter.default_time_format,
-        level=logging.INFO,
-        handlers=(
-            RichHandler(
-                console=console,
-                omit_repeated_times=False,
-                show_path=False,
-                rich_tracebacks=True,
-                tracebacks_extra_lines=0,
-            ),
-        ),
-        force=True,
-    )
-
-
 async def main() -> None:
-    configure_logging()
-
     from . import bot, db  # noqa: PLC0415
 
     await db.init_db()
@@ -78,4 +54,8 @@ async def main() -> None:
 
 
 if __name__ == "__main__":
-    get_async_run()(main())
+    _logs_listener.start()
+    try:
+        get_async_run()(main())
+    finally:
+        _logs_listener.stop()
