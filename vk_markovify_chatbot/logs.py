@@ -14,7 +14,6 @@ def _fix_vkbottle_logging_nonsense() -> None:
     import vkbottle.modules  # noqa: F401, PLC0415
 
     logging.root.handlers[0].setFormatter(None)
-    logging.root.setLevel(logging.INFO)
 
 
 def configure() -> logging.handlers.QueueListener:
@@ -24,6 +23,8 @@ def configure() -> logging.handlers.QueueListener:
     logging.root.setLevel(logging.ERROR)
 
     _fix_vkbottle_logging_nonsense()
+
+    logging.root.setLevel(logging.INFO)
 
     # Start logging before importing rich for the first time
     import rich.traceback  # noqa: PLC0415
