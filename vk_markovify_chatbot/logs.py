@@ -9,11 +9,21 @@ if TYPE_CHECKING:
     from typing import Any
 
 
+def _fix_vkbottle_logging_nonsense() -> None:
+    # Fix vkbottle logging nonsense
+    import vkbottle.modules  # noqa: F401, PLC0415
+
+    logging.root.handlers[0].setFormatter(None)
+    logging.root.setLevel(logging.INFO)
+
+
 def configure() -> logging.handlers.QueueListener:
     log_queue: queue.Queue[Any] = queue.Queue()
 
-    logging.root.setLevel(logging.INFO)
     logging.root.addHandler(logging.handlers.QueueHandler(log_queue))
+    logging.root.setLevel(logging.ERROR)
+
+    _fix_vkbottle_logging_nonsense()
 
     # Start logging before importing rich for the first time
     import rich.traceback  # noqa: PLC0415
