@@ -1,3 +1,5 @@
+# Разработка прекращена
+
 # vk-markovify-chatbot
 
 [![CI](https://github.com/monosans/vk-markovify-chatbot/actions/workflows/ci.yml/badge.svg)](https://github.com/monosans/vk-markovify-chatbot/actions/workflows/ci.yml)
@@ -46,7 +48,7 @@
 - Выполните следующие команды:
   ```bash
   docker compose build --pull
-  docker compose up --no-log-prefix
+  docker compose up --no-log-prefix --remove-orphans
   ```
 
 ### Запуск из исходного кода
